@@ -21,6 +21,8 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+const MAX_ICAL_EVENTS = 500;
+
 /**
  * GET /ical/:zipcodeId/:streetId/:houseNumber
  * Generate an iCalendar file for the upcoming 12 months of waste collections
@@ -32,7 +34,7 @@ router.get('/:zipcodeId/:streetId/:houseNumber', async (req: Request, res: Respo
   const houseNumber = req.params['houseNumber'] as string;
 
   if (!zipcodeId || !streetId || !houseNumber) {
-    res.status(400).send('Missing required parameters: zipcodeId, streetId, houseNumber');
+    res.status(400).type('text/plain').send('Missing required parameters: zipcodeId, streetId, houseNumber');
     return;
   }
 
@@ -48,15 +50,15 @@ router.get('/:zipcodeId/:streetId/:houseNumber', async (req: Request, res: Respo
       houseNumber,
       formatDate(fromDate),
       formatDate(untilDate),
-      500
+      MAX_ICAL_EVENTS
     );
 
     res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="fostplus-collections.ics"');
     res.send(icsContent);
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    res.status(500).type('text/plain').send(`Error generating iCalendar: ${message}`);
+    console.error('Error generating iCalendar:', err);
+    res.status(500).type('text/plain').send('Failed to generate iCalendar. Please check your address parameters and try again.');
   }
 });
 
