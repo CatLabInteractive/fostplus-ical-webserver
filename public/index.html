@@ -103,6 +103,8 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .btn:hover { background: #2b6cb0; }
     .btn:disabled { background: #a0aec0; cursor: not-allowed; }
@@ -142,19 +144,23 @@
       display: flex;
       gap: 0.5rem;
       margin-top: 0.75rem;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow: auto;
     }
 
     .copy-row a {
       display: inline-block;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem 0.75rem;
       background: #48bb78;
       color: #fff;
       border-radius: 8px;
-      font-size: 0.875rem;
+      font-size: 0.8125rem;
       font-weight: 600;
       text-decoration: none;
       transition: background 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .copy-row a:hover { background: #38a169; }
 

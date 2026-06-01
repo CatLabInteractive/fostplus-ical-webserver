@@ -1,33 +1,54 @@
-# fostplus-ical-webserver
+# 🗑️ fostplus-ical-webserver
 
-A Node.js web application that lets users look up their Belgian home address and generate a **personalised iCal subscription URL** for their Fostplus waste-collection schedule (next 12 months).
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
-Built with [Express](https://expressjs.com/) and the [`@leventhan/fostplus-api-wrapper`](https://github.com/LeventHAN/fostplus-api-wrapper) library.
+A self-hostable Node.js web application that lets Belgian residents look up their home address and generate a **personalised iCal subscription URL** for their [Fostplus](https://www.fostplus.be/) waste-collection schedule.
+
+Subscribe once in Google Calendar, Apple Calendar or Outlook — your collection dates update automatically for the next 12 months. 📅
+
+---
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><strong>Step 1 — Postal code</strong><br/><img src="screenshots/step1-zipcode.png" width="260" alt="Enter postal code"/></td>
+    <td align="center"><strong>Step 2 — Street search</strong><br/><img src="screenshots/step2-street.png" width="260" alt="Street search with autocomplete"/></td>
+    <td align="center"><strong>Step 3 — House number</strong><br/><img src="screenshots/step3-housenumber.png" width="260" alt="Enter house number"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Step 4 — Options</strong><br/><img src="screenshots/step4-options.png" width="260" alt="Language and display options"/></td>
+    <td align="center" colspan="2"><strong>Step 5 — Your iCal URL</strong><br/><img src="screenshots/step5-result.png" width="260" alt="Generated iCal URL ready to copy"/></td>
+  </tr>
+</table>
 
 ---
 
 ## Features
 
-- 🏠 Multi-step address wizard (postal code → street → house number → options)
-- 🌍 Language selection for fraction names: Dutch (default), English, French
-- 😀 Optional emoji mode (🌿 📄 ♻️ 🗑️ …) instead of text labels
-- 📆 Optional day-grouping: combine all fractions of the same day into one calendar event
-- 🔗 Generates a stable, shareable iCal URL for your address
-- 📅 Returns all upcoming waste-collection events for the next 12 months
-- 📋 One-click copy button and direct browser link
-- Works with any calendar app that supports iCal subscriptions (Google Calendar, Apple Calendar, Outlook, …)
+- 🏠 **5-step address wizard** — postal code → street → house number → options → URL
+- 🌍 **Multilingual** — fraction names in Dutch (default), English or French
+- 😀 **Emoji mode** — swap text labels for emojis (🌿 📄 ♻️ 🗑️ …)
+- 📆 **Day grouping** — combine all fractions of the same day into one calendar event
+- 🔗 **Stable, shareable URL** — bookmark or share your personal iCal feed
+- 📅 **12 months of events** — always up to date when your calendar app refreshes
+- 📋 **One-click copy** and direct browser link for easy setup
+- Works with **Google Calendar, Apple Calendar, Outlook** and any iCal-compatible app
 
 ---
 
 ## Prerequisites
 
-- Node.js 18+
-- A Fostplus API consumer key (`x-consumer` header value).  
+- **Node.js 18+**
+- A **Fostplus API consumer key** (`x-consumer` header value).  
   This value is publicly used by the Fostplus recycling website. You can find it by inspecting the network requests on [fostplus.be](https://www.fostplus.be/) or from the [`fostplus-api-wrapper`](https://github.com/LeventHAN/fostplus-api-wrapper) project tests.
 
 ---
 
-## Setup
+## Quick start
 
 ```bash
 # 1. Clone the repository
@@ -49,7 +70,7 @@ npm start
 npm run dev
 ```
 
-The server will start on <http://localhost:3000> (or the `PORT` from your `.env`).
+Open <http://localhost:3000> in your browser to use the address wizard.
 
 ---
 
@@ -64,20 +85,20 @@ The server will start on <http://localhost:3000> (or the `PORT` from your `.env`
 
 ## API endpoints
 
-| Method | Path                                   | Description                                         |
-|--------|----------------------------------------|-----------------------------------------------------|
-| `GET`  | `/`                                    | Address wizard UI                                   |
-| `GET`  | `/api/zipcodes?q=<term>`               | Search for postal codes matching `term`             |
-| `GET`  | `/api/streets?q=<term>&zipcodeId=<id>` | Search for streets matching `term` in the given zip |
-| `GET`  | `/ical/:zipcodeId/:streetId/:houseNumber` | Download / subscribe to the iCal feed            |
+| Method | Path                                      | Description                                         |
+|--------|-------------------------------------------|-----------------------------------------------------|
+| `GET`  | `/`                                       | Address wizard UI                                   |
+| `GET`  | `/api/zipcodes?q=<term>`                  | Search for postal codes matching `term`             |
+| `GET`  | `/api/streets?q=<term>&zipcodeId=<id>`    | Search for streets matching `term` in the given zip |
+| `GET`  | `/ical/:zipcodeId/:streetId/:houseNumber` | Download / subscribe to the iCal feed               |
 
 ### iCal query parameters
 
-| Parameter | Values              | Default | Description                                                    |
-|-----------|---------------------|---------|----------------------------------------------------------------|
-| `lang`    | `nl`, `en`, `fr`    | `nl`    | Language for fraction names (Dutch, English, French)           |
-| `emoji`   | `true`, `false`     | `false` | Replace text labels with emojis (🌿 📄 ♻️ 🗑️ …)              |
-| `group`   | `true`, `false`     | `false` | Group all fractions of the same day into a single event        |
+| Parameter | Values           | Default | Description                                           |
+|-----------|------------------|---------|-------------------------------------------------------|
+| `lang`    | `nl`, `en`, `fr` | `nl`    | Language for fraction names (Dutch, English, French)  |
+| `emoji`   | `true`, `false`  | `false` | Replace text labels with emojis (🌿 📄 ♻️ 🗑️ …)     |
+| `group`   | `true`, `false`  | `false` | Group all fractions of the same day into a single event |
 
 ### iCal URL examples
 
@@ -92,8 +113,6 @@ http://localhost:3000/ical/zipcode-id-here/street-id-here/42?lang=en&emoji=true&
 http://localhost:3000/ical/zipcode-id-here/street-id-here/42?lang=fr
 ```
 
-Subscribe to this URL in your calendar app to receive automatic updates.
-
 ---
 
 ## Project structure
@@ -101,7 +120,9 @@ Subscribe to this URL in your calendar app to receive automatic updates.
 ```
 .
 ├── public/
-│   └── index.html       # Single-page address wizard
+│   ├── index.html       # Single-page address wizard
+│   └── robots.txt       # Disallow all search engine indexing
+├── screenshots/         # README screenshots
 ├── src/
 │   ├── app.ts           # Express app entry point
 │   └── routes/
@@ -111,3 +132,15 @@ Subscribe to this URL in your calendar app to receive automatic updates.
 ├── package.json
 └── tsconfig.json
 ```
+
+---
+
+## Contributing
+
+Pull requests and issues are welcome! Please open an issue first for significant changes.
+
+---
+
+## License
+
+[ISC](https://opensource.org/licenses/ISC)
