@@ -21,7 +21,7 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-const MAX_ICAL_EVENTS = 500;
+const MAX_ICAL_EVENTS = 200;
 
 /**
  * GET /ical/:zipcodeId/:streetId/:houseNumber
