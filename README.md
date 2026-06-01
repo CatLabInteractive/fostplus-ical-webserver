@@ -15,12 +15,13 @@ Subscribe once in Google Calendar, Apple Calendar or Outlook — your collection
 
 <table>
   <tr>
-    <td align="center"><strong>Step 1 — Postal code</strong><br/><img src="screenshots/step1-zipcode.png" width="280" alt="Enter postal code"/></td>
-    <td align="center"><strong>Step 2 — Street search</strong><br/><img src="screenshots/step2-street.png" width="280" alt="Street search with autocomplete"/></td>
+    <td align="center"><strong>Step 1 — Postal code</strong><br/><img src="screenshots/step1-zipcode.png" width="260" alt="Enter postal code"/></td>
+    <td align="center"><strong>Step 2 — Street search</strong><br/><img src="screenshots/step2-street.png" width="260" alt="Street search with autocomplete"/></td>
+    <td align="center"><strong>Step 3 — House number</strong><br/><img src="screenshots/step3-housenumber.png" width="260" alt="Enter house number"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Step 4 — Options</strong><br/><img src="screenshots/step4-options.png" width="280" alt="Language and display options"/></td>
-    <td align="center"><strong>Step 5 — Your iCal URL</strong><br/><img src="screenshots/step5-result.png" width="280" alt="Generated iCal URL ready to copy"/></td>
+    <td align="center"><strong>Step 4 — Options</strong><br/><img src="screenshots/step4-options.png" width="260" alt="Language and display options"/></td>
+    <td align="center" colspan="2"><strong>Step 5 — Your iCal URL</strong><br/><img src="screenshots/step5-result.png" width="260" alt="Generated iCal URL ready to copy"/></td>
   </tr>
 </table>
 
