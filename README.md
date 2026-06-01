@@ -8,7 +8,10 @@ Built with [Express](https://expressjs.com/) and the [`@leventhan/fostplus-api-w
 
 ## Features
 
-- 🏠 Multi-step address wizard (postal code → street → house number)
+- 🏠 Multi-step address wizard (postal code → street → house number → options)
+- 🌍 Language selection for fraction names: Dutch (default), English, French
+- 😀 Optional emoji mode (🌿 📄 ♻️ 🗑️ …) instead of text labels
+- 📆 Optional day-grouping: combine all fractions of the same day into one calendar event
 - 🔗 Generates a stable, shareable iCal URL for your address
 - 📅 Returns all upcoming waste-collection events for the next 12 months
 - 📋 One-click copy button and direct browser link
@@ -68,10 +71,25 @@ The server will start on <http://localhost:3000> (or the `PORT` from your `.env`
 | `GET`  | `/api/streets?q=<term>&zipcodeId=<id>` | Search for streets matching `term` in the given zip |
 | `GET`  | `/ical/:zipcodeId/:streetId/:houseNumber` | Download / subscribe to the iCal feed            |
 
-### iCal URL example
+### iCal query parameters
+
+| Parameter | Values              | Default | Description                                                    |
+|-----------|---------------------|---------|----------------------------------------------------------------|
+| `lang`    | `nl`, `en`, `fr`    | `nl`    | Language for fraction names (Dutch, English, French)           |
+| `emoji`   | `true`, `false`     | `false` | Replace text labels with emojis (🌿 📄 ♻️ 🗑️ …)              |
+| `group`   | `true`, `false`     | `false` | Group all fractions of the same day into a single event        |
+
+### iCal URL examples
 
 ```
+# Dutch (default), individual events
 http://localhost:3000/ical/zipcode-id-here/street-id-here/42
+
+# English, emoji labels, grouped by day
+http://localhost:3000/ical/zipcode-id-here/street-id-here/42?lang=en&emoji=true&group=true
+
+# French, text labels
+http://localhost:3000/ical/zipcode-id-here/street-id-here/42?lang=fr
 ```
 
 Subscribe to this URL in your calendar app to receive automatic updates.
