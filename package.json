@@ -24,7 +24,8 @@
   "dependencies": {
     "@leventhan/fostplus-api-wrapper": "^1.0.3",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "ical-generator": "^10.2.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

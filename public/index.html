@@ -168,6 +168,37 @@
     }
     .address-summary strong { color: #2d3748; }
 
+    .options-group {
+      margin-bottom: 1rem;
+    }
+    .options-group select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      margin-top: 0.35rem;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .options-group select:focus { border-color: #3182ce; }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: normal;
+      color: #2d3748;
+      cursor: pointer;
+    }
+    .checkbox-label input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      cursor: pointer;
+    }
+
     .progress {
       display: flex;
       gap: 0.35rem;
@@ -194,11 +225,12 @@
       <div class="progress-dot" id="dot-2"></div>
       <div class="progress-dot" id="dot-3"></div>
       <div class="progress-dot" id="dot-4"></div>
+      <div class="progress-dot" id="dot-5"></div>
     </div>
 
     <!-- Step 1: Zipcode search -->
     <div class="step active" id="step-1">
-      <div class="step-label">Step 1 of 4</div>
+      <div class="step-label">Step 1 of 5</div>
       <label for="zipcodeInput">Enter your postal code</label>
       <input type="text" id="zipcodeInput" placeholder="e.g. 2880" autocomplete="off" />
       <div class="loading" id="zipcodeLoading" style="display:none">Searching…</div>
@@ -209,7 +241,7 @@
 
     <!-- Step 2: Street search -->
     <div class="step" id="step-2">
-      <div class="step-label">Step 2 of 4</div>
+      <div class="step-label">Step 2 of 5</div>
       <label for="streetInput">Enter your street name</label>
       <input type="text" id="streetInput" placeholder="e.g. Kerkstraat" autocomplete="off" />
       <div class="loading" id="streetLoading" style="display:none">Searching…</div>
@@ -223,19 +255,52 @@
 
     <!-- Step 3: House number -->
     <div class="step" id="step-3">
-      <div class="step-label">Step 3 of 4</div>
+      <div class="step-label">Step 3 of 5</div>
       <label for="houseInput">Enter your house number</label>
       <input type="text" id="houseInput" placeholder="e.g. 42" autocomplete="off" />
       <div class="error" id="houseError" style="display:none"></div>
       <div style="margin-top:1rem">
         <button class="btn btn-secondary" id="houseBack">← Back</button>
-        <button class="btn" id="houseNext" disabled>Generate URL →</button>
+        <button class="btn" id="houseNext" disabled>Next →</button>
       </div>
     </div>
 
-    <!-- Step 4: Result -->
+    <!-- Step 4: Options -->
     <div class="step" id="step-4">
-      <div class="step-label">Step 4 of 4 — Your iCal URL</div>
+      <div class="step-label">Step 4 of 5 — Options</div>
+
+      <div class="options-group">
+        <label for="langSelect">Language for fraction names</label>
+        <select id="langSelect">
+          <option value="nl" selected>Nederlands (Dutch)</option>
+          <option value="en">English</option>
+          <option value="fr">Français (French)</option>
+        </select>
+      </div>
+
+      <div class="options-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="emojiCheck" />
+          Show emojis instead of text (🌿 📄 ♻️ 🗑️)
+        </label>
+      </div>
+
+      <div class="options-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="groupCheck" />
+          Group all fractions of the same day into one event
+        </label>
+      </div>
+
+      <div style="margin-top:1rem">
+        <button class="btn btn-secondary" id="optionsBack">← Back</button>
+        <button class="btn" id="optionsNext">Generate URL →</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Result -->
+    <div class="step" id="step-5">
+      <div class="step-label">Step 5 of 5 — Your iCal URL</div>
       <div class="address-summary" id="addressSummary"></div>
       <p style="font-size:0.875rem;color:#4a5568;margin-bottom:0.5rem">
         Subscribe to this URL in your calendar app (Google Calendar, Apple Calendar, Outlook, …)
@@ -256,6 +321,9 @@
       zipcode: null,   // { id, code, name }
       street: null,    // { id, name }
       houseNumber: '',
+      lang: 'nl',
+      emoji: false,
+      group: false,
     };
 
     // --- Helpers ---
@@ -431,8 +499,30 @@
         return;
       }
       state.houseNumber = val;
+      showStep(4);
+    });
 
-      const url = `${window.location.origin}/ical/${encodeURIComponent(state.zipcode.id)}/${encodeURIComponent(state.street.id)}/${encodeURIComponent(state.houseNumber)}`;
+    // --- Step 4: Options ---
+    const langSelect   = document.getElementById('langSelect');
+    const emojiCheck   = document.getElementById('emojiCheck');
+    const groupCheck   = document.getElementById('groupCheck');
+    const optionsBack  = document.getElementById('optionsBack');
+    const optionsNext  = document.getElementById('optionsNext');
+
+    optionsBack.addEventListener('click', () => showStep(3));
+
+    optionsNext.addEventListener('click', () => {
+      state.lang  = langSelect.value;
+      state.emoji = emojiCheck.checked;
+      state.group = groupCheck.checked;
+
+      const params = new URLSearchParams();
+      if (state.lang !== 'nl') params.set('lang', state.lang);
+      if (state.emoji) params.set('emoji', 'true');
+      if (state.group) params.set('group', 'true');
+
+      const base = `${window.location.origin}/ical/${encodeURIComponent(state.zipcode.id)}/${encodeURIComponent(state.street.id)}/${encodeURIComponent(state.houseNumber)}`;
+      const url = params.toString() ? `${base}?${params.toString()}` : base;
 
       document.getElementById('icalUrl').textContent = url;
       document.getElementById('openBtn').href = url;
@@ -441,10 +531,10 @@
       document.getElementById('addressSummary').innerHTML =
         `<strong>Address:</strong> ${state.street.name} ${state.houseNumber}, ${zipLabel}`;
 
-      showStep(4);
+      showStep(5);
     });
 
-    // --- Step 4 actions ---
+    // --- Step 5 actions ---
     document.getElementById('copyBtn').addEventListener('click', () => {
       const url = document.getElementById('icalUrl').textContent;
       navigator.clipboard.writeText(url).then(() => {
@@ -458,6 +548,12 @@
       state.zipcode = null;
       state.street = null;
       state.houseNumber = '';
+      state.lang = 'nl';
+      state.emoji = false;
+      state.group = false;
+      langSelect.value = 'nl';
+      emojiCheck.checked = false;
+      groupCheck.checked = false;
       zipcodeInput.value = '';
       zipcodeResults.style.display = 'none';
       zipcodeNext.disabled = true;
