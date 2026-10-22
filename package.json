@@ -1,6 +1,9 @@
 {
   "name": "fostplus-ical-webserver",
   "version": "1.0.0",
+  "engines": {
+    "node": "24.x"
+  },
   "description": "A Node.js web server that generates personalised iCal feeds for Fostplus waste collection schedules",
   "main": "dist/app.js",
   "scripts": {
